@@ -447,6 +447,9 @@ enum VideoEventType {
   /// The video stopped to buffer.
   bufferingEnd,
 
+  /// Duration update event
+  durationUpdate,
+
   /// The video is set to play
   play,
 
