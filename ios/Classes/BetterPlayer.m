@@ -7,6 +7,7 @@
 
 static void* timeRangeContext = &timeRangeContext;
 static void* statusContext = &statusContext;
+static void* durationContext = &durationContext;
 static void* playbackLikelyToKeepUpContext = &playbackLikelyToKeepUpContext;
 static void* playbackBufferEmptyContext = &playbackBufferEmptyContext;
 static void* playbackBufferFullContext = &playbackBufferFullContext;
@@ -48,6 +49,10 @@ AVPictureInPictureController *_pipController;
         [item addObserver:self forKeyPath:@"loadedTimeRanges" options:0 context:timeRangeContext];
         [item addObserver:self forKeyPath:@"status" options:0 context:statusContext];
         [item addObserver:self forKeyPath:@"presentationSize" options:0 context:presentationSizeContext];
+        [item addObserver:self
+                forKeyPath:@"seekableTimeRanges"
+                    options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                    context:durationContext];
         [item addObserver:self
                forKeyPath:@"playbackLikelyToKeepUp"
                   options:0
@@ -91,6 +96,7 @@ AVPictureInPictureController *_pipController;
     if (self._observersAdded){
         [_player removeObserver:self forKeyPath:@"rate" context:nil];
         [[_player currentItem] removeObserver:self forKeyPath:@"status" context:statusContext];
+        [[_player currentItem] removeObserver:self forKeyPath:@"seekableTimeRanges" context:durationContext];
         [[_player currentItem] removeObserver:self forKeyPath:@"presentationSize" context:presentationSizeContext];
         [[_player currentItem] removeObserver:self
                                    forKeyPath:@"loadedTimeRanges"
@@ -372,6 +378,16 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
     }
     else if (context == presentationSizeContext){
         [self onReadyToPlay];
+    }
+
+    else if (context == durationContext) {
+        if (_eventSink != nil) {
+            int64_t duration = [BetterPlayerTimeUtils FLTCMTimeToMillis:([_player.currentItem duration])];
+            if (_overriddenDuration > 0 && duration > _overriddenDuration){
+                duration = _overriddenDuration;
+            }
+            _eventSink(@{@"event" : @"durationUpdate", @"duration" : @(duration), @"key" : _key});
+        }
     }
 
     else if (context == statusContext) {

@@ -504,6 +504,23 @@ internal class BetterPlayer(
                 }
             }
 
+            override fun onTimelineChanged(Timeline timeline, int reason) {
+                if (timeline.isEmpty() && timeline.getWindowCount() == 0) {
+                    return;
+                }
+
+                int lastWindowIndex = timeline.getWindowCount() - 1;
+                Timeline.Window window = new Timeline.Window();
+                timeline.getWindow(lastWindowIndex, window);
+
+                long seekableDurationMs = window.getDurationMs();;
+                
+                val event: MutableMap<String, Any> = HashMap()
+                event["event"] = "durationUpdate";
+                event["duration"] = seekableDurationMs;
+                eventSink.success(event);
+            }
+
             override fun onPlayerError(error: PlaybackException) {
                 eventSink.error("VideoError", "Video player had error $error", "")
             }
