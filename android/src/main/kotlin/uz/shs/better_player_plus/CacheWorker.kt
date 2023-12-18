@@ -3,14 +3,14 @@ package uz.shs.better_player_plus
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.media3.datasource.DataSpec
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.datasource.cache.CacheWriter
 import uz.shs.better_player_plus.DataSourceUtils.isHTTP
 import uz.shs.better_player_plus.DataSourceUtils.getUserAgent
 import uz.shs.better_player_plus.DataSourceUtils.getDataSourceFactory
 import androidx.work.WorkerParameters
-import com.google.android.exoplayer2.upstream.cache.CacheWriter
 import androidx.work.Worker
-import com.google.android.exoplayer2.upstream.DataSpec
-import com.google.android.exoplayer2.upstream.HttpDataSource.HttpDataSourceException
 import java.lang.Exception
 import java.util.*
 
@@ -45,7 +45,7 @@ class CacheWorker(
                 val userAgent = getUserAgent(headers)
                 val dataSourceFactory = getDataSourceFactory(userAgent, headers)
                 var dataSpec = DataSpec(uri, 0, preCacheSize)
-                if (cacheKey != null && cacheKey.isNotEmpty()) {
+                if (!cacheKey.isNullOrEmpty()) {
                     dataSpec = dataSpec.buildUpon().setKey(cacheKey).build()
                 }
                 val cacheDataSourceFactory = CacheDataSourceFactory(
@@ -75,7 +75,7 @@ class CacheWorker(
             }
         } catch (exception: Exception) {
             Log.e(TAG, exception.toString())
-            return if (exception is HttpDataSourceException) {
+            return if (exception is HttpDataSource.HttpDataSourceException) {
                 Result.success()
             } else {
                 Result.failure()

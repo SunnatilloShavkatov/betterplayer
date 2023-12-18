@@ -1,13 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jhomlala.better_player_example">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
 
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="Better Player Example"
-        android:usesCleartextTraffic="true">
+        android:label="Better Player Plus"
+        android:usesCleartextTraffic="true"
+        android:supportsPictureInPicture="true"
+        tools:targetApi="n">
         <activity
             android:name=".MainActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -17,7 +21,8 @@
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:theme="@style/LaunchTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,6 +37,4 @@
 
     </application>
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

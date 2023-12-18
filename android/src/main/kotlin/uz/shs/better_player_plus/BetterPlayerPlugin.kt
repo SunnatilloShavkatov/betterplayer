@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.LongSparseArray
+import android.util.Rational
 import uz.shs.better_player_plus.BetterPlayerCache.releaseCache
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -127,11 +128,11 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
             CLEAR_CACHE_METHOD -> clearCache(result)
             else -> {
                 if (call.argument<Any>(TEXTURE_ID_PARAMETER) == null) {
-                    result.error(
-                        "Unknown textureId",
-                        "No video player associated with texture id",
-                        null
-                    )
+//                    result.error(
+//                        "Unknown textureId",
+//                        "No video player associated with texture id",
+//                        null
+//                    )
                     return
                 }
                 val textureId = ((call.argument<Any>(TEXTURE_ID_PARAMETER) as Int?) ?: 0).toLong()
@@ -434,7 +435,9 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
     private fun enablePictureInPicture(player: BetterPlayer) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             player.setupMediaSession(flutterState!!.applicationContext)
-            activity!!.enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+            activity!!.enterPictureInPictureMode(PictureInPictureParams.Builder().setAspectRatio(
+                Rational(16, 9)
+            ).build())
             startPictureInPictureListenerTimer(player)
             player.onPictureInPictureStatusChanged(true)
         }
