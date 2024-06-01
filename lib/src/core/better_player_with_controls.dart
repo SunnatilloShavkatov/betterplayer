@@ -122,6 +122,8 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
     }
     _initialized = true;
 
+    bool isPlaying = betterPlayerController.isPlaying() ?? false;
+
     final bool placeholderOnTop =
         betterPlayerController.betterPlayerConfiguration.placeholderOnTop;
     // ignore: avoid_unnecessary_containers
@@ -129,7 +131,7 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
       child: Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-          if (placeholderOnTop) _buildPlaceholder(betterPlayerController),
+          if (!isPlaying && placeholderOnTop) _buildPlaceholder(betterPlayerController),
           Transform.rotate(
             angle: rotation * pi / 180,
             child: _BetterPlayerVideoFitWidget(
@@ -145,7 +147,7 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
             subtitles: betterPlayerController.subtitlesLines,
             playerVisibilityStream: playerVisibilityStreamController.stream,
           ),
-          if (!placeholderOnTop) _buildPlaceholder(betterPlayerController),
+          if (!isPlaying && !placeholderOnTop) _buildPlaceholder(betterPlayerController),
           _buildControls(context, betterPlayerController),
         ],
       ),
