@@ -122,8 +122,6 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
     }
     _initialized = true;
 
-    bool isPlaying = betterPlayerController.isPlaying() ?? false;
-
     final bool placeholderOnTop =
         betterPlayerController.betterPlayerConfiguration.placeholderOnTop;
     // ignore: avoid_unnecessary_containers
@@ -131,7 +129,7 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
       child: Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-          if (!isPlaying && placeholderOnTop) _buildPlaceholder(betterPlayerController),
+          if (placeholderOnTop) _buildPlaceholder(betterPlayerController),
           Transform.rotate(
             angle: rotation * pi / 180,
             child: _BetterPlayerVideoFitWidget(
@@ -147,7 +145,7 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
             subtitles: betterPlayerController.subtitlesLines,
             playerVisibilityStream: playerVisibilityStreamController.stream,
           ),
-          if (!isPlaying && !placeholderOnTop) _buildPlaceholder(betterPlayerController),
+          if (!placeholderOnTop) _buildPlaceholder(betterPlayerController),
           _buildControls(context, betterPlayerController),
         ],
       ),
@@ -155,9 +153,15 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
   }
 
   Widget _buildPlaceholder(BetterPlayerController betterPlayerController) {
+    var position = betterPlayerController.videoPlayerController?.value.position;
+    //使用isPlaying来判断是否播放，会导致一次黑屏闪烁,所以播放开始一段时间后来判断
+    if (position != null && position.inMilliseconds > 10) {
+      return const SizedBox.shrink();
+    }
+
     return betterPlayerController.betterPlayerDataSource!.placeholder ??
         betterPlayerController.betterPlayerConfiguration.placeholder ??
-        Container();
+        const SizedBox.shrink();
   }
 
   Widget _buildControls(
