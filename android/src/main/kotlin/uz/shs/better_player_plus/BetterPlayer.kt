@@ -648,8 +648,7 @@ internal class BetterPlayer(
 
     fun setAudioTrack(name: String, index: Int) {
         try {
-            val mappedTrackInfo = trackSelector.currentMappedTrackInfo
-            if (mappedTrackInfo == null) return null
+            val mappedTrackInfo = trackSelector.currentMappedTrackInfo ?: return
             for (rendererIndex in 0 until mappedTrackInfo.rendererCount) {
                 if (mappedTrackInfo.getRendererType(rendererIndex) != C.TRACK_TYPE_AUDIO) {
                     continue
