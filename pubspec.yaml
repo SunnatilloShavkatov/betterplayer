@@ -5,7 +5,7 @@ homepage: https://github.com/SunnatilloShavkatov/betterplayer.git
 documentation: https://github.com/SunnatilloShavkatov/betterplayer.git
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: ">=3.1.0 <4.0.0"
   flutter: ">=3.13.0"
 
 dependencies:
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  collection: 1.18.0
+  collection: 1.19.0
   wakelock_plus: 1.2.8
   path_provider: 2.1.5
   visibility_detector: 0.4.0+2
