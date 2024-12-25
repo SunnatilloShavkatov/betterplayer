@@ -110,6 +110,9 @@ internal class BetterPlayer(
             this.customDefaultLoadControl.bufferForPlaybackMs,
             this.customDefaultLoadControl.bufferForPlaybackAfterRebufferMs
         )
+        .setTargetBufferBytes(C.LENGTH_UNSET)
+        .setPrioritizeTimeOverSizeThresholds(true)
+        
         loadControl = loadBuilder.build()
         exoPlayer = ExoPlayer.Builder(context)
             .setTrackSelector(trackSelector)
@@ -758,6 +761,7 @@ internal class BetterPlayer(
         eventChannel.setStreamHandler(null)
         surface?.release()
         exoPlayer?.release()
+        exoPlayer = null
     }
 
     override fun equals(other: Any?): Boolean {
